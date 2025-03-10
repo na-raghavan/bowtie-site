@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bowtie2 Web Interface</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        .form-check-label { font-weight: normal; }
+        .form-group { margin-bottom: 1.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Bowtie2 Alignment</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <!-- File Uploads -->
+            <div class="form-group">
+                <label>Reference Genome (FASTA/FA)</label>
+                <input type="file" class="form-control-file" name="reference" required>
+            </div>
+            <div class="form-group">
+                <label>Reads File (FASTQ/FQ)</label>
+                <input type="file" class="form-control-file" name="reads" required>
+            </div>
+
+            <!-- Basic Parameters -->
+            <div class="form-group">
+                <label>Index Name</label>
+                <input type="text" class="form-control" name="index_name" value="index" required>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Alignment Mode</label>
+                    <select class="form-control" name="mode">
+                        <option value="end-to-end">End-to-end</option>
+                        <option value="local">Local</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Preset Options</label>
+                    <select class="form-control" name="preset">
+                        <option value="">None</option>
+                        <option value="very-fast">Very Fast</option>
+                        <option value="fast">Fast</option>
+                        <option value="sensitive">Sensitive</option>
+                        <option value="very-sensitive">Very Sensitive</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Performance -->
+            <div class="form-group">
+                <label>Threads <span id="threadsValue" class="badge badge-secondary">1</span></label>
+                <input type="range" class="form-control-range" name="threads" id="threadsSlider" 
+                       min="1" max="8" value="1" required>
+            </div>
+
+            <!-- Scoring Parameters -->
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label>Mismatch Penalty Max (MX)</label>
+                    <input type="number" class="form-control" name="mp_max" min="0" step="1" placeholder="6">
+                    <small class="text-muted">--mp MX</small>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Mismatch Penalty Min (MN)</label>
+                    <input type="number" class="form-control" name="mp_min" min="0" step="1" placeholder="2">
+                    <small class="text-muted">--mp MN</small>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Match Bonus (MA)</label>
+                    <input type="number" class="form-control" name="ma" min="0" step="1" placeholder="2">
+                    <small class="text-muted">--ma MA</small>
+                </div>
+            </div>
+
+            <!-- Reporting Options -->
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Max Alignments (-k)</label>
+                    <input type="number" class="form-control" name="k" min="1" value="1">
+                    <small class="text-muted">Report up to N alignments</small>
+                </div>
+                <div class="form-group col-md-6 align-self-end">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="all" id="allCheck">
+                        <label class="form-check-label" for="allCheck">Report all alignments (--all)</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Options -->
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label>Random Seed</label>
+                    <input type="number" class="form-control" name="seed" min="0" step="1">
+                    <small class="text-muted">--seed</small>
+                </div>
+                <div class="form-group col-md-8">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="no_unal" id="noUnalCheck">
+                        <label class="form-check-label" for="noUnalCheck">Suppress unaligned reads (--no-unal)</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="dovetail" id="dovetailCheck">
+                        <label class="form-check-label" for="dovetailCheck">Dovetail pairs (--dovetail)</label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg btn-block mt-4">Run Alignment</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('threadsSlider').addEventListener('input', function() {
+            document.getElementById('threadsValue').textContent = this.value;
+        });
+    </script>
+</body>
+</html>
